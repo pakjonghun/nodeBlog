@@ -4,7 +4,6 @@ import Http from "http";
 import globalRouter from "./routers/globalRouter";
 import postRouter from "./routers/postRouter";
 import morgan from "morgan";
-import { authMiddleWare } from "./middleWare";
 import apiRouter from "./routers/apiRouter";
 import commentsRouter from "./routers/commentsRouter";
 
@@ -23,6 +22,6 @@ app.use("/post/static", express.static(process.cwd() + "/assets"));
 app.use("/", globalRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentsRouter);
-app.use("/api", authMiddleWare, apiRouter);
+app.use("/api", apiRouter);
 
 export default server;

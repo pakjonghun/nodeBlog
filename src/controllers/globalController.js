@@ -10,29 +10,44 @@ export const getJoin = (req, res) => {
 };
 
 export const postJoin = async (req, res) => {
-  const { id, password } = req.body;
+  const { id, password, passwordConfirm } = req.body;
+
+  if (password !== passwordConfirm) {
+    return res.send({ ok: false, error: "비밀번호를 다시 확인하세요" });
+  }
+
+  if (password.includes(id)) {
+    return res.send({
+      ok: false,
+      error: "비밀번호에 닉네임이 포함 될 수 없습니다.",
+    });
+  }
+
   const schema = Joi.object({
-    id: Joi.string().min(3),
-    password: Joi.string().min(5),
+    id: Joi.string().min(3).pattern(new RegExp("^[a-zA-z0-9]")),
+    password: Joi.string().min(4),
   });
 
   try {
     const user = await User.exists({ id });
+    console.log(user);
 
     if (user) {
-      return res.send({ ok: false, error: "같은 아이디가 존재합니다." });
+      return res.send({ ok: false, error: "중복된 닉네임 입니다.." });
     }
 
     const { _, error } = schema.validate({ id, password });
 
     if (error) {
       const errorPath = error["details"][0]["path"][0];
+      console.log(error);
       return res.send({ ok: false, error: `${errorPath}를 다시 확인하세요` });
     }
 
-    await User.create({ id, password });
+    const resul = await User.create({ id, password });
+    console.log(resul);
     const token = jwt.sign({ id }, process.env.SECRET);
-    res.send({ ok: true, data: token });
+    return res.send({ ok: true, data: token });
   } catch (e) {
     console.log(e);
     return res.send({ ok: false, error: "서버 오류가 발생했습니다." });
@@ -53,6 +68,8 @@ export const postLogin = async (req, res) => {
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    console.log(user.password);
+    console.log(isPasswordCorrect);
 
     if (!isPasswordCorrect) {
       return res.send({ ok: false, error: "계정정보가 틀립니다." });
@@ -71,19 +88,29 @@ export const home = (req, res) => {
 };
 export const homeApi = async (req, res) => {
   try {
+    const token = req.headers.authorization;
+    const tokenArray = token.trim().split(" ");
+    tokenArray.shift();
     const posts = await Post.find({}).sort({ createdAt: -1 });
-
-    return res.send({ ok: true, data: posts, error: null });
+    return res.send({
+      ok: true,
+      data: posts,
+      error: null,
+      user: tokenArray[0] !== "null" ? true : false,
+    });
   } catch (e) {
     console.log(e);
-    return res.send({ ok: false, error: "서버에서 에러가 발생했어요." });
+    return res.send({
+      ok: false,
+      error: "서버에서 에러가 발생했어요.",
+    });
   }
 };
 
 export const meApi = (req, res) => {
   try {
     const user = res.locals.user;
-    return res.send({ ok: !!user, data: user.id });
+    return res.send({ ok: !!user, data: user.id, user });
   } catch (e) {
     console.log(e);
     return res.send({ ok: false, error: "서버 오류가 발생했습니다." });
@@ -111,3 +138,7 @@ export const isMine = async (req, res) => {
     return res.send({ ok: 1, error: "서버에서 오류가 발생했어요." });
   }
 };
+
+export function pow(req, res) {
+  return req + res;
+}

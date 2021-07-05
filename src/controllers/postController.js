@@ -30,15 +30,19 @@ export const detail = (req, res) => {
 export const postDetail = async (req, res) => {
   const { id } = req.params;
   const { user } = res.locals;
+
   try {
-    const post = await Post.findOne({ _id: id }).populate("comments");
+    const post = await Post.findOne({ _id: id })
+      .populate("comments")
+      .sort({ createdAt: 1 })
+      .exec();
 
     if (!post) {
-      return res.send({ ok: 0, erorr: "포스트가 존재하지 않습니다." });
+      return res.send({ ok: 0, erorr: "포스트가 존재하지 않습니다.", user });
     }
-    res.send({ ok: true, data: { post, user } });
+    res.send({ ok: true, data: post });
   } catch (e) {
     console.log(e);
-    res.send({ ok: 1, error: "서버에서 에러가 발생했습니다." });
+    res.send({ ok: 1, error: "서버에서 에러가 발생했습니다.", user });
   }
 };

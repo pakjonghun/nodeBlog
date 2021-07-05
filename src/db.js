@@ -2,7 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 
 mongoose
-  .connect(process.env.MONGODB, {
+  .connect("mongodb://test:test@localhost:27017/admin", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

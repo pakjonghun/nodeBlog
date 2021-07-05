@@ -4,14 +4,14 @@ import jwt from "jsonwebtoken";
 export const authMiddleWare = async (req, res, next) => {
   let tokenArray = req.headers.authorization;
   if (!tokenArray) {
-    return res.send({ ok: false, error: "토큰이 없습니다." });
+    return res.send({ ok: false, error: "로그인이 필요한 기능입니다." });
   }
 
   if (tokenArray) {
     tokenArray = tokenArray.split(" ");
 
     if (tokenArray[0] !== "Bearer") {
-      return res.send({ ok: false, error: "토큰형식이 잘못됬습니다." });
+      return res.send({ ok: false, error: "로그인이 필요한 기능입니다." });
     }
 
     try {
@@ -22,7 +22,7 @@ export const authMiddleWare = async (req, res, next) => {
       next();
     } catch (e) {
       console.log(e);
-      return res.send({ ok: false, error: "토큰 형식이 잘못되었습니다." });
+      return res.send({ ok: false, error: "로그인이 필요한 기능입니다." });
     }
   }
 };

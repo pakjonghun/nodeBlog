@@ -19,7 +19,7 @@ export const addComment = async (req, res) => {
       description,
       user: user.id,
     });
-    post.comments.push(post._id);
+    post.comments.push(comment._id);
     user.posts.push(post._id);
     await user.save();
     await post.save();
