@@ -31,6 +31,7 @@ export const addComment = async (req, res) => {
     });
     post.comments.push(comment._id);
     user.posts.push(post._id);
+    delete user.password;
     await user.save();
     await post.save();
     res.send({ ok: true, data: comment._id });

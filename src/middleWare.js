@@ -1,27 +1,23 @@
 import User from "./models/userModel";
 import jwt from "jsonwebtoken";
 
-export const authAndSaveResult = (req, res, next) => {
+export const authAndSaveResult = async (req, res, next) => {
+  const { authorization } = req.headers;
+  let token;
+
+  if (authorization) token = authorization.split(" ").pop();
+
+  if (!token) return next();
+
   try {
-    const { authorization } = req.headers;
-    let token;
-
-    if (authorization) token = authorization.split(" ").pop();
-
-    if (!token) {
-      return next();
-    }
-
     const { id } = jwt.verify(token, process.env.SECRET);
 
-    User.findOne({ id }).then((dbData) => {
-      res.locals.user = dbData;
-      next();
-    });
+    const user = await User.findOne({ id });
+    res.locals.user = user;
   } catch (e) {
     console.log(e);
   } finally {
-    next();
+    return next();
   }
 };
 

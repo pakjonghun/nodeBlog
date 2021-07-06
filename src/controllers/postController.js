@@ -1,9 +1,10 @@
 import Post from "../models/postModel";
+import User from "../models/userModel";
 
 export const postAddPost = async (req, res) => {
   try {
     const { user } = res.locals;
-
+    console.log(user);
     if (!user) {
       return res.status(401).send({ data: user, error: "로그인 하세요" });
     }
@@ -12,6 +13,10 @@ export const postAddPost = async (req, res) => {
 
     const post = await Post.create({ title, description, user: user.id });
     user.posts.push(post._id);
+    await User.findOneAndUpdate(
+      { id: user.id },
+      { $push: { posts: post._id } }
+    );
 
     await user.save();
     res.send({ ok: true, data: user });

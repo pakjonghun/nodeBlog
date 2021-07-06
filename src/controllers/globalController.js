@@ -6,7 +6,7 @@ import Post from "../models/postModel";
 import Comment from "../models/commentModel";
 
 export const getJoin = (req, res) => {
-  res.render("join.ejs", { title: "회원가입" });
+  return res.render("join.ejs", { title: "회원가입" });
 };
 
 export const postJoin = async (req, res) => {
@@ -30,7 +30,6 @@ export const postJoin = async (req, res) => {
 
   try {
     const user = await User.exists({ id });
-    console.log(user);
 
     if (user) {
       return res.send({ ok: false, error: "중복된 닉네임 입니다.." });
@@ -40,22 +39,22 @@ export const postJoin = async (req, res) => {
 
     if (error) {
       const errorPath = error["details"][0]["path"][0];
-      console.log(error);
       return res.send({ ok: false, error: `${errorPath}를 다시 확인하세요` });
     }
 
-    const resul = await User.create({ id, password });
-    console.log(resul);
+    await User.create({ id, password });
     const token = jwt.sign({ id }, process.env.SECRET);
     return res.send({ ok: true, data: token });
   } catch (e) {
     console.log(e);
-    return res.send({ ok: false, error: "서버 오류가 발생했습니다." });
+    return res
+      .status(500)
+      .send({ ok: false, error: "서버 오류가 발생했습니다." });
   }
 };
 
 export const getLogin = async (req, res) => {
-  res.render("login", { title: "로그인" });
+  return res.render("login", { title: "로그인" });
 };
 
 export const postLogin = async (req, res) => {
@@ -67,8 +66,6 @@ export const postLogin = async (req, res) => {
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    console.log(user.password);
-    console.log(isPasswordCorrect);
 
     if (!isPasswordCorrect) {
       return res.send({ ok: false, error: "계정정보가 틀립니다." });

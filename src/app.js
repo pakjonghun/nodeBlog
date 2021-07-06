@@ -1,5 +1,4 @@
 import express from "express";
-import socketIO from "socket.io";
 import Http from "http";
 import globalRouter from "./routers/globalRouter";
 import postRouter from "./routers/postRouter";
@@ -22,8 +21,8 @@ app.use("/post/static", express.static(process.cwd() + "/assets"));
 app.use(authAndSaveResult);
 
 app.use("/", globalRouter);
+app.use("/api", apiRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentsRouter);
-app.use("/api", apiRouter);
 
 export default server;

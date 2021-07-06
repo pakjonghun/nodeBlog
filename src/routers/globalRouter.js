@@ -13,8 +13,8 @@ const globalRouter = express.Router();
 
 globalRouter.get("/", home);
 
-globalRouter.route("/join").all(publicAccess).get(getJoin).post(postJoin);
+globalRouter.route("/join").get(getJoin).post(postJoin);
 
-globalRouter.route("/login").all(publicAccess).get(getLogin).post(postLogin);
+globalRouter.route("/login").get(getLogin).post(postLogin);
 
 export default globalRouter;
