@@ -1,5 +1,5 @@
 import "regenerator-runtime";
-// import "dotenv/config";
+import "dotenv/config";
 import server from "./app";
 import "./models/userModel";
 import "./db";
