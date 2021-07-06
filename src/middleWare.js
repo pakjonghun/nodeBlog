@@ -4,9 +4,8 @@ import jwt from "jsonwebtoken";
 export const authAndSaveResult = async (req, res, next) => {
   const { authorization } = req.headers;
   let token;
-
   if (authorization) token = authorization.split(" ").pop();
-  if (!isFinite(token)) return next();
+  if (authorization === null || authorization === undefined) return next();
   try {
     const { id } = jwt.verify(token, process.env.SECRET);
 
