@@ -29,7 +29,9 @@
     "mongoose": "^5.13.1",
     "regenerator-runtime": "^0.13.7",
     "socket.io": "^4.1.2",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "morgan": "^1.10.0",
+    "mockgoose": "^8.0.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
