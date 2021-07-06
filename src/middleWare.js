@@ -6,9 +6,7 @@ export const authAndSaveResult = async (req, res, next) => {
   let token;
 
   if (authorization) token = authorization.split(" ").pop();
-
-  if (!token) return next();
-
+  if (!isFinite(token)) return next();
   try {
     const { id } = jwt.verify(token, process.env.SECRET);
 
