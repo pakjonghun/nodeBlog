@@ -1,12 +1,13 @@
 import express from "express";
-import { homeApi } from "../controllers/globalController";
-import { postDetail } from "../controllers/postController";
-import { authMiddleWare } from "../middleWare";
+import { apiLoginAndJoin, homeApi } from "../controllers/globalController";
+import { postAddApi, postDetailApi } from "../controllers/postController";
 
 const apiRouter = express.Router();
 
 apiRouter.get("/", homeApi);
-
-apiRouter.get("/:id", postDetail);
+apiRouter.get("/add", postAddApi);
+apiRouter.get("/post/:id", postDetailApi);
+apiRouter.get("/login", apiLoginAndJoin);
+apiRouter.get("/join", apiLoginAndJoin);
 
 export default apiRouter;

@@ -60,7 +60,6 @@ export const getLogin = async (req, res) => {
 
 export const postLogin = async (req, res) => {
   const { id, password } = req.body;
-  console.log(id, password);
   try {
     const user = await User.findOne({ id });
     if (!user) {
@@ -88,19 +87,15 @@ export const home = (req, res) => {
 };
 export const homeApi = async (req, res) => {
   try {
-    const token = req.headers.authorization;
-    const tokenArray = token.trim().split(" ");
-    tokenArray.shift();
-    const posts = await Post.find({}).sort({ createdAt: -1 });
+    const user = res.locals.user;
+    const post = await Post.find({}).sort({ createdAt: -1 });
     return res.send({
       ok: true,
-      data: posts,
-      error: null,
-      user: tokenArray[0] !== "null" ? true : false,
+      data: { post, user },
     });
   } catch (e) {
     console.log(e);
-    return res.send({
+    return res.status(500).send({
       ok: false,
       error: "서버에서 에러가 발생했어요.",
     });
@@ -117,28 +112,7 @@ export const meApi = (req, res) => {
   }
 };
 
-export const isMine = async (req, res) => {
-  try {
-    const user = res.locals.user;
-    const { commentId } = req.params;
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.send({ ok: 0, error: "댓글이 없습니다." });
-    }
-
-    const commentOwner = comment.user;
-    const isMyComment = user.id === commentOwner;
-    if (!isMyComment) {
-      return res.send({ ok: 2, error: "권한이 없습니다." });
-    } else if (isMyComment) {
-      return res.send({ ok: true });
-    }
-  } catch (e) {
-    console.log(e);
-    return res.send({ ok: 1, error: "서버에서 오류가 발생했어요." });
-  }
+export const apiLoginAndJoin = (req, res) => {
+  const user = res.locals.user;
+  return res.send({ data: user });
 };
-
-export function pow(req, res) {
-  return req + res;
-}

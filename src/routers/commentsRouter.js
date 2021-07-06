@@ -3,14 +3,12 @@ import {
   addComment,
   delComment,
   editComment,
-  getComments,
 } from "../controllers/commentController";
-import { authMiddleWare } from "../middleWare";
 
 const commentsRouter = express.Router();
 
-commentsRouter.post("/add", authMiddleWare, addComment);
-commentsRouter.patch("/edit", authMiddleWare, editComment);
-commentsRouter.delete("/delete", authMiddleWare, delComment);
+commentsRouter.post("/add", addComment);
+commentsRouter.patch("/edit/:id", editComment);
+commentsRouter.delete("/delete/:id", delComment);
 
 export default commentsRouter;

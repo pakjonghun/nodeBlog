@@ -1,11 +1,10 @@
 import "dotenv/config";
 import mongoose from "mongoose";
-
 mongoose
-  .connect("mongodb://test:test@localhost:27017/admin", {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
     useCreateIndex: true,
   })
   .catch((err) => console.log(err));

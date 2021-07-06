@@ -1,28 +1,47 @@
 import User from "./models/userModel";
 import jwt from "jsonwebtoken";
 
-export const authMiddleWare = async (req, res, next) => {
-  let tokenArray = req.headers.authorization;
-  if (!tokenArray) {
-    return res.send({ ok: false, error: "로그인이 필요한 기능입니다." });
-  }
+export const authAndSaveResult = (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+    let token;
 
-  if (tokenArray) {
-    tokenArray = tokenArray.split(" ");
+    if (authorization) token = authorization.split(" ").pop();
 
-    if (tokenArray[0] !== "Bearer") {
-      return res.send({ ok: false, error: "로그인이 필요한 기능입니다." });
+    if (!token) {
+      return next();
     }
 
-    try {
-      const token = tokenArray[1];
-      const { id } = jwt.verify(token, process.env.SECRET);
-      const user = await User.findOne({ id }).populate("posts");
-      res.locals.user = user;
+    const { id } = jwt.verify(token, process.env.SECRET);
+
+    User.findOne({ id }).then((dbData) => {
+      res.locals.user = dbData;
       next();
-    } catch (e) {
-      console.log(e);
-      return res.send({ ok: false, error: "로그인이 필요한 기능입니다." });
-    }
+    });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    next();
+  }
+};
+
+export const privateProtect = (req, res, next) => {
+  const user = res.locals.user;
+
+  if (user) {
+    next();
+  } else {
+    return res.status(401).send({ error: "로그인이 필요합니다." });
+  }
+};
+
+export const publicAccess = (req, res, next) => {
+  const loggedIn = res.locals.isLoggedIn;
+  if (!loggedIn) {
+    next();
+  } else {
+    return res
+      .status(401)
+      .send({ ok: false, error: "이미 로그인 되어 있습니다.." });
   }
 };
