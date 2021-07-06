@@ -1,0 +1,52 @@
+.deatil__createdAt {
+  width: 100%;
+  text-align: left;
+}
+
+.comment__container {
+  width: 100%;
+}
+
+.comment__form {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid lightgray;
+  border-radius: 1rem;
+}
+
+.comment__form input {
+  padding: 0.4rem;
+  margin: 0.1rem;
+}
+
+.comment__description {
+  width: 100%;
+  border: none;
+  font-size: 1.1rem;
+}
+
+.comments__list {
+  padding: 2rem 0;
+  border-radius: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(241, 233, 233);
+}
+.list__comment {
+  display: grid;
+  grid-template-columns: 2fr 5fr 1fr 1fr;
+  margin: 0.8rem;
+  width: 80%;
+  border-bottom: 1px solid rgb(175, 199, 207);
+}
+
+.Acomment__writer {
+  margin-right: 1rem;
+}
+
+.list__comment button {
+  padding: 0.3rem;
+  font-size: 1rem;
+}

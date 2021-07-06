@@ -1,0 +1,17 @@
+li {
+  list-style: none;
+  margin-bottom: 3rem;
+}
+
+.list__info .info__title {
+  transition: 0.2s color linear;
+}
+
+.list__info:hover .info__title {
+  transition: 0.2s color linear;
+  color: gray;
+}
+
+.list__info span:not(:last-child) {
+  margin-right: 1rem;
+}
